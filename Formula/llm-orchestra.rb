@@ -10,7 +10,9 @@ class LlmOrchestra < Formula
   depends_on "python@3.12"
 
   def install
-    virtualenv_install_with_resources using: "python@3.12"
+    virtualenv_create(libexec, "python@3.12")
+    system libexec/"bin/pip", "install", "."
+    bin.install_symlink libexec/"bin/llm-orc"
   end
 
   test do
