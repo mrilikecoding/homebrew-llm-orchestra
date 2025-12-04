@@ -10,14 +10,26 @@ class LlmOrchestra < Formula
   depends_on "python@3.12"
 
   def install
-    system "#{Formula["python@3.12"].opt_bin}/python3.12", "-m", "venv", libexec
-    system libexec/"bin/pip", "install", "--upgrade", "pip", "setuptools", "wheel"
-    system libexec/"bin/pip", "install", "."
-    bin.install_symlink libexec/"bin/llm-orc"
+    venv = virtualenv_create(libexec, "python3.12")
+    venv.pip_install_and_link buildpath
+
+    # Remove build tools (~21MB)
+    %w[pip setuptools wheel pkg_resources _distutils_hack].each do |pkg|
+      rm_rf libexec/"lib/python3.12/site-packages/#{pkg}"
+    end
+
+    # Remove dist-info metadata (~2MB)
+    (libexec/"lib/python3.12/site-packages").glob("*.dist-info").each(&:rmtree)
+
+    # Remove test directories (~4.5MB)
+    (libexec/"lib").glob("**/tests").each(&:rmtree)
+
+    # Remove compiled bytecode (~40MB, regenerates on first run)
+    (libexec/"lib").glob("**/*.pyc").each(&:unlink)
+    (libexec/"lib").glob("**/__pycache__").each(&:rmtree)
   end
 
   test do
-    system "#{bin}/llm-orc", "--help"
     assert_match "llm orchestra", shell_output("#{bin}/llm-orc --help").downcase
   end
 end
