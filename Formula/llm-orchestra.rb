@@ -16,13 +16,10 @@ class LlmOrchestra < Formula
     system libexec/"bin/pip", "install", "."
     bin.install_symlink libexec/"bin/llm-orc"
 
-    # Cleanup: Remove build tools (~21MB)
-    %w[pip setuptools wheel pkg_resources _distutils_hack].each do |pkg|
+    # Cleanup: Remove pip and wheel (keep setuptools due to .pth file)
+    %w[pip wheel].each do |pkg|
       rm_rf libexec/"lib/python3.12/site-packages/#{pkg}"
     end
-
-    # Cleanup: Remove dist-info metadata (~2MB)
-    (libexec/"lib/python3.12/site-packages").glob("*.dist-info").each(&:rmtree)
 
     # Cleanup: Remove test directories from dependencies (~4.5MB)
     (libexec/"lib/python3.12/site-packages").glob("*/tests").each(&:rmtree)
