@@ -1,6 +1,4 @@
 class LlmOrchestra < Formula
-  include Language::Python::Virtualenv
-
   desc "Multi-agent LLM communication system with ensemble orchestration"
   homepage "https://github.com/mrilikecoding/llm-orc"
   url "https://github.com/mrilikecoding/llm-orc/archive/refs/tags/v0.14.4.tar.gz"
