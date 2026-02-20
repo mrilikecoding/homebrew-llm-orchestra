@@ -14,6 +14,14 @@ class LlmOrchestra < Formula
     system libexec/"bin/pip", "install", "."
     bin.install_symlink libexec/"bin/llm-orc"
 
+    # Fix: Clear dylib ID on cryptography's Rust .so to prevent Homebrew
+    # relocation failures (header too small for Cellar paths).
+    # The .so works fine without a dylib ID — Python loads it via dlopen.
+    rust_so = libexec/"lib/python3.12/site-packages/cryptography/hazmat/bindings/_rust.abi3.so"
+    if rust_so.exist?
+      system "install_name_tool", "-id", "", rust_so
+    end
+
     # Cleanup: Remove pip and wheel (keep setuptools due to .pth file)
     %w[pip wheel].each do |pkg|
       rm_rf libexec/"lib/python3.12/site-packages/#{pkg}"
