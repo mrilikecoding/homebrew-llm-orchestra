@@ -1,8 +1,8 @@
 class LlmOrchestra < Formula
   desc "Multi-agent LLM communication system with ensemble orchestration"
   homepage "https://github.com/mrilikecoding/llm-orc"
-  url "https://github.com/mrilikecoding/llm-orc/archive/refs/tags/v0.25.1.tar.gz"
-  sha256 "3fe8e65b5154d911839715d88eca7740fac18f791cb9ff61906fe96ad0872c66"
+  url "https://github.com/mrilikecoding/llm-orc/archive/refs/tags/v0.25.2.tar.gz"
+  sha256 "b5fe585aba28f42401cd5314e61878132debab192afda01288e1099694295889"
   license "MIT"
 
   depends_on "python@3.12"
